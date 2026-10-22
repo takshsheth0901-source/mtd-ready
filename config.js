@@ -9,6 +9,7 @@ window.MTD_CONFIG = {
 
   // Your details, shown on the site
   SITE_NAME: "MTD Ready",
+  PRODUCT_NAME: "MTD Autopilot",   // name of the auto-accountant; change it here when you pick one
   CONTACT_EMAIL: "takshsheth0901@gmail.com",
   BUSINESS_NAME: "MTD Ready", // who is responsible for the data (privacy page); add your name, e.g. "Taksh Sheth trading as MTD Ready"
 

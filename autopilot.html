@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>MTD Autopilot — your bank statement, sorted for HMRC</title>
+<meta name="description" content="Upload your bank statement. MTD Autopilot sorts every transaction, builds your Making Tax Digital quarterly figures and estimates your tax. Free, and your statement never leaves your device.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;700;800&family=Figtree:wght@400;600&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="style.css">
+<style>
+.badge{display:inline-block;font:500 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;background:var(--accent-soft);color:var(--accent);padding:3px 10px;border-radius:999px}
+.drop{border:2px dashed var(--line);border-radius:16px;background:var(--surface);padding:28px;display:grid;gap:14px;justify-items:start}
+.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+.drop input[type=file]{position:absolute;opacity:0;width:1px;height:1px}
+.privacy{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--muted)}
+.privacy b{color:var(--ink)}
+.opts{display:flex;flex-wrap:wrap;gap:18px 28px;align-items:end}
+.opts .field{max-width:240px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:820px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:4px;align-content:start;min-width:0}
+.kpi .l{font-size:13px;color:var(--muted)}
+.kpi b{font:500 clamp(22px,3vw,30px) var(--mono);font-variant-numeric:tabular-nums}
+.kpi span{font-size:13px;color:var(--muted)}
+.kpi.hi{border-color:var(--accent);background:var(--accent-soft)}
+.flagbtn{font:inherit;font-size:15px;background:var(--warn-soft);color:var(--warn);border:1px solid var(--warn);border-radius:10px;padding:10px 14px;cursor:pointer;text-align:left}
+.tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:14px}
+.tbl table{min-width:640px;margin:0}
+.tbl th span{display:block;font:400 11px var(--body);color:var(--muted)}
+.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.grp td{font-family:var(--display);font-weight:700;background:var(--bg);font-size:14px}
+tr.tot td{border-top:2px solid var(--ink);font-weight:600}
+tr.due td{color:var(--muted);font-size:13px}
+td small{color:var(--muted);font-size:12px}
+.txhead{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}
+.txhead select{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--surface);color:var(--ink)}
+#txbody td{padding:8px 10px;font-size:14px}
+#txbody td.desc{max-width:280px;overflow-wrap:anywhere}
+#txbody td.pos{color:var(--ok)}
+#txbody select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);max-width:230px}
+#txbody tr.flag td{background:var(--warn-soft)}
+.you{color:var(--ok);margin-left:6px;font-size:13px}
+.split{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:820px){.split{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="site-head gutter">
+  <div class="wrap">
+    <a class="logo" href="index.html">MTD<span>Ready</span></a>
+    <nav class="nav" aria-label="Main">
+      <a href="index.html">Checker</a>
+      <a href="autopilot.html" aria-current="page"><span class="pname">MTD Autopilot</span></a>
+      <a href="mtd-sole-traders.html">Guides</a>
+      <a class="btn-sm" href="index.html#help">Get an accountant</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="gutter" style="padding-top:40px">
+    <div class="wrap stack" style="gap:22px">
+      <div class="stack" style="gap:10px">
+        <div><span class="badge">Free beta</span></div>
+        <h1 style="max-width:18ch">Your bank statement, sorted for HMRC in seconds.</h1>
+        <p class="lede"><span class="pname">MTD Autopilot</span> reads your statement, sorts every payment into the categories HMRC asks for, builds your quarterly Making Tax Digital figures and estimates the tax to set aside.</p>
+      </div>
+
+      <div class="drop" id="drop">
+        <h3>Upload a bank statement</h3>
+        <p class="hint" style="max-width:62ch">Download a <b>CSV</b> statement from your banking app (Monzo, Starling, Barclays, HSBC, Lloyds, NatWest, Nationwide and most others offer it under “Export” or “Download transactions”), then choose it here.</p>
+        <div class="row">
+          <label class="btn primary" for="file" style="position:relative">Choose CSV file<input type="file" id="file" accept=".csv,text/csv"></label>
+          <button class="btn ghost" id="try-sample" type="button">Try it with example data</button>
+        </div>
+        <div id="upload-msg" class="notice" hidden></div>
+        <div class="privacy"><span aria-hidden="true">🔒</span><span><b>Your statement never leaves your device.</b> Everything is worked out inside your browser. Nothing is uploaded or stored.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="gutter" id="results" hidden style="padding-top:8px">
+    <div class="wrap stack" style="gap:22px">
+      <div class="opts">
+        <fieldset>
+          <legend style="font-size:15px">You earn as a</legend>
+          <div class="chips">
+            <label><input type="radio" name="mode" id="mode-st" value="st"><span>Sole trader</span></label>
+            <label><input type="radio" name="mode" id="mode-ll" value="ll"><span>Landlord</span></label>
+            <label><input type="radio" name="mode" id="mode-both" value="both" checked><span>Both</span></label>
+          </div>
+        </fieldset>
+        <div class="field"><label for="year">Tax year</label>
+          <select id="year"><option value="2026-27" selected>2026–27</option><option value="2027-28">2027–28</option></select></div>
+        <div class="field"><label for="salary">Salary from a job this year (£)</label><input id="salary" inputmode="decimal" placeholder="0" autocomplete="off"></div>
+      </div>
+      <p class="hint" id="src"></p>
+
+      <div class="kpis">
+        <div class="kpi"><span class="l">Profit so far</span><b id="k-profit"></b><span id="k-profit-sub"></span></div>
+        <div class="kpi"><span class="l">Tax on it so far</span><b id="k-tax"></b><span id="k-tax-sub"></span></div>
+        <div class="kpi"><span class="l">Tax for the full year</span><b id="k-year"></b><span id="k-year-sub"></span></div>
+        <div class="kpi hi"><span class="l">Set aside each month</span><b id="k-save"></b><span>so the tax bill isn’t a shock</span></div>
+      </div>
+
+      <button class="flagbtn" id="check" type="button" hidden><b id="check-n"></b> a look. Tell us what they are and we’ll remember for next time →</button>
+
+      <div class="stack" style="gap:10px">
+        <h2 style="font-size:24px">Your quarterly figures for HMRC</h2>
+        <p class="hint">These are the totals that go into each quarterly update. Mortgage interest isn’t taken off your rental profit; it gives you a tax credit instead, which the estimate above includes. If you have a repayment mortgage, only the interest part counts, so check your mortgage statement and adjust.</p>
+        <div class="tbl"><table id="qtable"></table></div>
+      </div>
+
+      <div class="stack" id="txwrap" style="gap:10px">
+        <div class="txhead">
+          <h2 style="font-size:24px">Every transaction</h2>
+          <div class="row">
+            <select id="txfilter" aria-label="Show"><option value="all">All</option><option value="check">Needs a look</option><option value="in">Money in</option><option value="out">Money out</option></select>
+            <button class="btn ghost" id="export" type="button">Download sorted CSV</button>
+          </div>
+        </div>
+        <p class="hint">Wrong category? Change it. We’ll apply it to other payments from the same place.</p>
+        <div class="tbl"><table><thead><tr><th>Date</th><th>Description</th><th class="num">Amount</th><th>Category</th></tr></thead><tbody id="txbody"></tbody></table></div>
+        <div><button class="btn ghost" id="more" type="button" hidden>Show all</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="gutter" style="background:var(--surface);border-block:1px solid var(--line)">
+    <div class="wrap split">
+      <div class="stack">
+        <div class="eyebrow">Coming next</div>
+        <h2>Connect your bank once. We send your updates to HMRC for you.</h2>
+        <p class="muted" style="margin:0">The full version of <span class="pname">MTD Autopilot</span> will link to your bank, sort payments automatically as they happen, and submit your quarterly updates to HMRC. Join the waitlist to be first in.</p>
+      </div>
+      <form id="wl" class="card form" novalidate>
+        <div class="field"><label for="wl-name">Name</label><input id="wl-name" autocomplete="name" maxlength="120"></div>
+        <div class="field"><label for="wl-email">Email</label><input id="wl-email" type="email" autocomplete="email" maxlength="200"></div>
+        <label class="check"><input type="checkbox" id="wl-ok"><span>Email me when it launches. I can unsubscribe any time. See the <a href="privacy.html">privacy notice</a>.</span></label>
+        <div id="wl-msg" class="notice" hidden></div>
+        <div><button class="btn primary" type="submit">Join the waitlist</button></div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot gutter">
+  <div class="wrap">
+    <p><b>Estimates only, not tax advice.</b> Uses England, Wales and Northern Ireland rates (Scotland differs). It doesn’t include allowances like the £1,000 trading allowance, capital allowances, pension contributions or student loans, and it doesn’t submit anything to HMRC yet. Check figures with an accountant before you file.</p>
+    <p><b>MTD Ready</b> is an independent service, not affiliated with HMRC. <a href="privacy.html">Privacy notice</a></p>
+  </div>
+</footer>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.50.0/dist/umd/supabase.js"></script>
+<script src="autopilot-tax.js"></script>
+<script src="autopilot.js"></script>
+</body>
+</html>
