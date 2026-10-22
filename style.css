@@ -116,6 +116,14 @@ input[type=range]{width:100%;max-width:420px;accent-color:var(--accent)}
 .steps li::before{content:counter(s);font:500 14px var(--mono);color:var(--accent)}
 .steps p{margin:0;color:var(--muted)}
 
+/* Homepage choices */
+.choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:760px){.choices{grid-template-columns:1fr}}
+.choices a{display:grid;gap:8px;align-content:start;text-decoration:none;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:16px;padding:22px}
+.choices a:hover{border-color:var(--accent)}
+.choices p{margin:0;color:var(--muted);font-size:15px}
+.choices .go{font-weight:600;color:var(--accent);margin-top:4px}
+
 /* Guide cards */
 .guides{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
 @media (max-width:760px){.guides{grid-template-columns:1fr}}

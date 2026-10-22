@@ -40,6 +40,27 @@ td small{color:var(--muted);font-size:12px}
 #txbody select{font:inherit;font-size:14px;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);max-width:230px}
 #txbody tr.flag td{background:var(--warn-soft)}
 .you{color:var(--ok);margin-left:6px;font-size:13px}
+.pro{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:20px;align-items:center;border-color:var(--accent)}
+@media (max-width:720px){.pro{grid-template-columns:1fr}}
+.ticks{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:4px;font-size:15px}
+.ticks li::before{content:"✓ ";color:var(--accent);font-weight:700}
+.price{font:500 36px var(--mono)}
+.price small{font:400 14px var(--body);color:var(--muted)}
+.report{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:28px;display:grid;gap:22px}
+.report h2{font-size:26px}.report h3{margin-bottom:6px}
+.report table{width:100%;min-width:0}
+.report .meta{display:flex;flex-wrap:wrap;gap:6px 20px;color:var(--muted);font-size:14px}
+.sumtable td:last-child{text-align:right;font-family:var(--mono);white-space:nowrap}
+.sumtable tr.strong td{font-weight:700;border-top:2px solid var(--ink)}
+@media print{
+  @page{margin:14mm}
+  body{background:#fff!important;color:#000!important}
+  .site-head,.site-foot,main>section:not(#report),#report .noprint{display:none!important}
+  #report{padding:0!important}
+  .report{border:0;padding:0;border-radius:0}
+  .tbl{overflow:visible;border:0}
+  tr{break-inside:avoid}
+}
 .split{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:24px;align-items:start}
 @media (max-width:820px){.split{grid-template-columns:1fr}}
 </style>
@@ -49,10 +70,10 @@ td small{color:var(--muted);font-size:12px}
   <div class="wrap">
     <a class="logo" href="index.html">MTD<span>Ready</span></a>
     <nav class="nav" aria-label="Main">
-      <a href="index.html">Checker</a>
-      <a href="autopilot.html" aria-current="page"><span class="pname">MTD Autopilot</span></a>
-      <a href="mtd-sole-traders.html">Guides</a>
-      <a class="btn-sm" href="index.html#help">Get an accountant</a>
+      <a href="index.html">Am I affected?</a>
+      <a href="autopilot.html">Sort my statement</a>
+      <a href="index.html#guides">Guides</a>
+      <a class="btn-sm" href="index.html#help">Get help</a>
     </nav>
   </div>
 </header>
@@ -111,6 +132,19 @@ td small{color:var(--muted);font-size:12px}
         <div class="tbl"><table id="qtable"></table></div>
       </div>
 
+      <div class="pro card" id="pro">
+        <div class="stack" style="gap:6px">
+          <div class="eyebrow">Pro report · one-off payment</div>
+          <h3 style="font-size:22px">Your full tax report, ready for your accountant or your own return</h3>
+          <ul class="ticks"><li>Year summary and tax breakdown</li><li>Quarterly figures with HMRC due dates</li><li>Totals for every category</li><li>Every transaction, sorted and listed</li><li>Save it as a PDF or print it</li></ul>
+        </div>
+        <div class="stack" style="gap:8px;justify-items:start">
+          <b class="price" id="pro-price">£9</b>
+          <button class="btn primary" id="pro-buy" type="button">Get my report</button>
+          <span class="hint" id="pro-note">Secure card payment by Stripe. Your statement stays on your device.</span>
+        </div>
+      </div>
+
       <div class="stack" id="txwrap" style="gap:10px">
         <div class="txhead">
           <h2 style="font-size:24px">Every transaction</h2>
@@ -123,6 +157,18 @@ td small{color:var(--muted);font-size:12px}
         <div class="tbl"><table><thead><tr><th>Date</th><th>Description</th><th class="num">Amount</th><th>Category</th></tr></thead><tbody id="txbody"></tbody></table></div>
         <div><button class="btn ghost" id="more" type="button" hidden>Show all</button></div>
       </div>
+    </div>
+  </section>
+
+  <section class="gutter" id="report" hidden style="padding-top:8px">
+    <div class="wrap stack" style="gap:16px">
+      <div id="paid-msg" class="notice ok noprint" hidden></div>
+      <div class="row noprint">
+        <button class="btn primary" id="report-print" type="button">Download PDF</button>
+        <button class="btn ghost" id="report-close" type="button">Back to my figures</button>
+        <span class="hint">Choose “Save as PDF” in the print window.</span>
+      </div>
+      <div class="report" id="report-body"></div>
     </div>
   </section>
 

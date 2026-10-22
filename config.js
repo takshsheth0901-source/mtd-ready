@@ -13,6 +13,10 @@ window.MTD_CONFIG = {
   CONTACT_EMAIL: "takshsheth0901@gmail.com",
   BUSINESS_NAME: "MTD Ready", // who is responsible for the data (privacy page); add your name, e.g. "Taksh Sheth trading as MTD Ready"
 
+  // Pro report: your Stripe Payment Link (starts https://buy.stripe.com/...). Leave "" to hide payments.
+  STRIPE_LINK: "",
+  PRO_PRICE: "£9",
+
   // Optional: link to your DIY guide on Gumroad or Payhip. Leave "" to hide it.
   GUIDE_URL: "",
   GUIDE_PRICE: "£19"

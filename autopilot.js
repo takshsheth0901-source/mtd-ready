@@ -172,7 +172,7 @@
   }
 
   // ---------- State ----------
-  let txs = [], mode = "both", year = "2026-27", source = "", showAll = false;
+  let txs = [], mode = "both", year = "2026-27", source = "", showAll = false, last = null;
   const manual = {}; // merchantKey -> category chosen by the user
 
   function resort(){
@@ -216,6 +216,7 @@
     const k = 12 / r.months;
     const now = T.estimate({salary, trading: tradeProfit, property: propProfit, finance: r.finance}, year);
     const full = T.estimate({salary, trading: tradeProfit * k, property: propProfit * k, finance: r.finance * k}, year);
+    last = { r, now, full, tradeProfit, propProfit, salary };
 
     $("src").textContent = source + " · " + r.inYear.length + " transactions in the " + T.YEARS[year].label + " tax year" + (r.outside ? " (" + r.outside + " outside it were left out)" : "");
     $("k-profit").textContent = gbp(tradeProfit + propProfit);
@@ -322,6 +323,84 @@
     if (error){ console.error(error); return say("bad", "That didn’t send. Please try again in a minute."); }
     $("wl").reset(); say("ok", "You’re on the list. We’ll email you when it can send your updates to HMRC.");
   });
+
+
+  // ---------- Pro report (one-off payment through a Stripe Payment Link) ----------
+  const store = { get(k){ try { return localStorage.getItem(k); } catch(_) { return null; } },
+                  set(k, v){ try { localStorage.setItem(k, v); return true; } catch(_) { return false; } },
+                  del(k){ try { localStorage.removeItem(k); } catch(_) {} } };
+  const PRICE = C.PRO_PRICE || "£9";
+  $("pro-price").textContent = PRICE;
+  function unlocked(){ return store.get("mtd_pro") === "1"; }
+  function setProButton(){
+    const b = $("pro-buy");
+    if (unlocked()){ b.textContent = "Open my report"; b.disabled = false; $("pro-note").textContent = "You’ve unlocked Pro reports on this device."; }
+    else if (!C.STRIPE_LINK){ b.textContent = "Coming soon"; b.disabled = true; $("pro-note").textContent = "Payments aren’t switched on yet."; }
+    else { b.textContent = "Get my report · " + PRICE; b.disabled = false; }
+  }
+  setProButton();
+
+  $("pro-buy").addEventListener("click", () => {
+    if (unlocked()) return showReport();
+    if (!C.STRIPE_LINK) return;
+    // Keep their sorted figures on this device so they're still here when Stripe sends them back.
+    const saved = store.set("mtd_pending", JSON.stringify({ txs: txs.map(t => Object.assign({}, t, {date: t.date.toISOString()})), mode, year, source,
+      salary: $("salary").value, manual, at: Date.now() }));
+    location.href = C.STRIPE_LINK;
+  });
+
+  function row(label, val, strong){ return '<tr' + (strong ? ' class="strong"' : '') + '><td>' + label + '</td><td>' + val + '</td></tr>'; }
+  function showReport(){
+    if (!last) return;
+    const { r, now, full, tradeProfit, propProfit, salary } = last;
+    const Y = T.YEARS[year].label, today = new Date().toLocaleDateString("en-GB", {day:"numeric", month:"long", year:"numeric"});
+    const who = mode === "st" ? "Sole trader" : mode === "ll" ? "Landlord" : "Sole trader and landlord";
+    let h = '<div><div class="eyebrow">' + esc(C.PRODUCT_NAME || "MTD Autopilot") + ' · Pro report</div><h2>Tax report, ' + Y + ' tax year</h2>' +
+      '<div class="meta"><span>Prepared ' + today + '</span><span>' + who + '</span><span>' + r.inYear.length + ' transactions</span><span>Covers about ' + Math.round(r.months) + ' month' + (Math.round(r.months) === 1 ? '' : 's') + '</span></div></div>';
+    h += '<div><h3>Summary</h3><table class="sumtable"><tbody>';
+    if (mode !== "ll") h += row("Business income", gbp(r.tradeIn, 2)) + row("Business expenses", gbp(r.tradeOut, 2)) + row("Business profit", gbp(tradeProfit, 2), true);
+    if (mode !== "st") h += row("Rent received", gbp(r.propIn, 2)) + row("Property expenses (excluding mortgage interest)", gbp(r.propOut, 2)) + row("Rental profit", gbp(propProfit, 2), true) + row("Mortgage interest (for the tax credit)", gbp(r.finance, 2));
+    if (salary) h += row("Salary from employment (taxed through PAYE)", gbp(salary, 2));
+    h += '</tbody></table></div>';
+    h += '<div><h3>Estimated tax on this income</h3><table class="sumtable"><tbody>' +
+      row("Income Tax so far", gbp(now.incomeTax, 2)) + row("Class 4 National Insurance so far", gbp(now.class4, 2)) + row("Total so far", gbp(now.total, 2), true) +
+      row("Projected for the full year", gbp(full.total, 2)) + row("Suggested amount to set aside each month", gbp(full.total / 12, 2), true) +
+      '</tbody></table><p class="hint" style="margin-top:8px">Projection assumes the rest of the year is like the months covered. England, Wales and NI rates.</p></div>';
+    h += '<div><h3>Quarterly figures</h3><div class="tbl"><table>' + $("qtable").innerHTML + '</table></div></div>';
+    const list = txs.filter(t => T.quarterOf(t.date, year) >= 0).sort((a, b) => a.date - b.date);
+    h += '<div><h3>All transactions</h3><div class="tbl"><table><thead><tr><th>Date</th><th>Description</th><th class="num">Amount</th><th>Category</th></tr></thead><tbody>' +
+      list.map(t => '<tr><td class="mono">' + t.date.toLocaleDateString("en-GB") + '</td><td>' + esc(t.desc) + '</td><td class="num">' + gbp(t.amount, 2) + '</td><td>' + esc(CATS[t.cat].label) + '</td></tr>').join("") +
+      '</tbody></table></div></div>';
+    h += '<p class="hint">Estimates only, not tax advice. Doesn’t include allowances such as the trading allowance, capital allowances, pension contributions or student loan. Payments marked “Needs a look” (' + r.unsorted.length + ') are not counted. Check with an accountant before filing.</p>';
+    $("report-body").innerHTML = h;
+    $("report").hidden = false;
+    $("report").scrollIntoView({block: "start"});
+  }
+  $("report-print").addEventListener("click", () => window.print());
+  $("report-close").addEventListener("click", () => { $("report").hidden = true; $("results").scrollIntoView({block: "start"}); });
+
+  // Coming back from Stripe: success link ends with ?paid={CHECKOUT_SESSION_ID}
+  (function(){
+    const p = new URLSearchParams(location.search).get("paid");
+    if (!p || !/^cs_/.test(p)) return;
+    store.set("mtd_pro", "1");
+    history.replaceState(null, "", location.pathname);
+    setProButton();
+    let pend = null; try { pend = JSON.parse(store.get("mtd_pending") || "null"); } catch(_) {}
+    store.del("mtd_pending");
+    if (pend && pend.txs && pend.txs.length){
+      mode = pend.mode || "both"; year = pend.year || year;
+      const mi = document.getElementById("mode-" + mode); if (mi) mi.checked = true;
+      $("year").value = year; $("salary").value = pend.salary || "";
+      Object.assign(manual, pend.manual || {});
+      load(pend.txs.map(t => Object.assign({}, t, {date: new Date(t.date)})), pend.source || "Your statement");
+      txs.forEach(t => { const o = pend.txs.find(x => x.id === t.id); if (o && o.manual){ t.cat = o.cat; t.manual = true; } });
+      render(); showReport();
+      const m = $("paid-msg"); m.textContent = "Payment received, thank you. Here’s your report."; m.hidden = false;
+    } else {
+      const m = $("upload-msg"); m.className = "notice ok"; m.textContent = "Payment received, thank you. Pro reports are now unlocked on this device. Upload your statement again and press “Open my report”."; m.hidden = false;
+    }
+  })();
 
   // Product name from settings
   document.querySelectorAll(".pname").forEach(e => e.textContent = C.PRODUCT_NAME || "MTD Autopilot");
