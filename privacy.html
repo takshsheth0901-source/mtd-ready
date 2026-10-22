@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Privacy notice — MTD Ready</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;700;800&family=Figtree:wght@400;600&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-head gutter">
+  <div class="wrap">
+    <a class="logo" href="index.html">MTD<span>Ready</span></a>
+    <nav class="nav" aria-label="Main"><a class="btn-sm" href="index.html#help">Get help</a></nav>
+  </div>
+</header>
+
+<main class="gutter">
+  <article class="narrow article">
+    <div class="eyebrow">Privacy</div>
+    <h1>Privacy notice</h1>
+    <p class="lede">This explains what we collect when you use MTD Ready, why, and what you can ask us to do with it.</p>
+
+    <h2>Who we are</h2>
+    <p><span class="biz"></span> runs MTD Ready and is responsible for your data. Contact: <span class="mail"></span>.</p>
+
+    <h2>What we collect</h2>
+    <ul>
+      <li>What you type in the help form: name, email, phone (if given), postcode, what help you want, and any message.</li>
+      <li>Your checker answers: whether you’re a sole trader or landlord, and your income band.</li>
+      <li>The date and time you sent the form.</li>
+    </ul>
+    <p>The checker itself runs in your browser. Nothing you enter in it is stored unless you send the help form.</p>
+
+    <h2>Why we use it</h2>
+    <p>To introduce you to one accountant who can help with Making Tax Digital, and to follow up about that introduction. We rely on your consent, which you give by ticking the box on the form.</p>
+
+    <h2>Who we share it with</h2>
+    <ul>
+      <li><b>One partner accountant</b>, chosen for your area and needs. They may pay us a fee if you become their client. This doesn’t change what you pay.</li>
+      <li><b>Our service providers</b>, who store the data for us: Supabase (database) and Vercel (website hosting).</li>
+    </ul>
+    <p>We never sell your details or add you to marketing lists.</p>
+
+    <h2>How long we keep it</h2>
+    <p>Up to 24 months after your enquiry, so we can track the introduction, then we delete it. Ask us and we’ll delete it sooner.</p>
+
+    <h2>Your rights</h2>
+    <p>You can ask to see, correct or delete your data, or withdraw consent at any time, by emailing <span class="mail"></span>. If you’re unhappy with how we’ve handled it, you can complain to the Information Commissioner’s Office at ico.org.uk.</p>
+
+    <p class="small muted" style="margin-top:28px">Last updated: October 2026.</p>
+  </article>
+</main>
+
+<footer class="site-foot gutter">
+  <div class="wrap"><p><b>MTD Ready</b> is an independent introduction and information service. Not affiliated with HMRC. Not tax advice.</p></div>
+</footer>
+<script src="config.js"></script>
+<script>
+  (function(){ var C = window.MTD_CONFIG || {};
+    document.querySelectorAll(".biz").forEach(function(e){ e.textContent = C.BUSINESS_NAME || "MTD Ready"; });
+    document.querySelectorAll(".mail").forEach(function(e){ e.textContent = C.CONTACT_EMAIL || ""; });
+  })();
+</script>
+</body>
+</html>

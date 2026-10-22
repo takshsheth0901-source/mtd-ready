@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>MTD Ready — Do you need Making Tax Digital?</title>
+<meta name="description" content="Free 30-second check for UK sole traders and landlords: do you need Making Tax Digital for Income Tax, when do you start, and what are your quarterly deadlines?">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;700;800&family=Figtree:wght@400;600&family=JetBrains+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f6b5c'/%3E%3Cpath d='M9 16.5l4.5 4.5L23 11' stroke='white' stroke-width='3.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+</head>
+<body>
+<header class="site-head gutter">
+  <div class="wrap">
+    <a class="logo" href="index.html">MTD<span>Ready</span></a>
+    <nav class="nav" aria-label="Main">
+      <a href="mtd-sole-traders.html">Sole traders</a>
+      <a href="mtd-landlords.html">Landlords</a>
+      <a href="mtd-software.html">Software</a>
+      <a class="btn-sm" href="#help">Get help</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="gutter" style="padding-top:40px">
+    <div class="wrap">
+      <div class="eyebrow">Free check · UK sole traders and landlords</div>
+      <h1 style="margin:10px 0 14px;max-width:18ch">Do you need Making Tax Digital, and when?</h1>
+      <p class="lede">From 6 April 2027, sole traders and landlords with over £30,000 of income must keep digital records and send HMRC an update every quarter. Check in 30 seconds whether that includes you.</p>
+
+      <div class="checker">
+        <form id="checker" onsubmit="return false" class="stack" style="gap:22px">
+          <fieldset>
+            <legend>How do you earn?</legend>
+            <div class="chips">
+              <label><input type="radio" name="who" id="who-st" value="st" checked><span>Sole trader / self-employed</span></label>
+              <label><input type="radio" name="who" id="who-ll" value="ll"><span>Landlord</span></label>
+              <label><input type="radio" name="who" id="who-both" value="both"><span>Both</span></label>
+              <label><input type="radio" name="who" id="who-ltd" value="ltd"><span>Limited company or partnership</span></label>
+            </div>
+          </fieldset>
+          <fieldset id="money-set">
+            <legend>Yearly income from self-employment and property</legend>
+            <p class="hint">Add both together. Use takings or rent received <b>before</b> expenses. Don’t include wages from a job, pensions or savings interest.</p>
+            <div class="money"><b>£</b><input id="amt" inputmode="numeric" autocomplete="off" value="34,000" aria-label="Yearly income in pounds"></div>
+            <input type="range" id="slide" min="0" max="100000" step="1000" value="34000" aria-label="Income slider">
+            <div class="scale"><span>£0</span><span>£25k</span><span>£50k</span><span>£75k</span><span>£100k</span></div>
+          </fieldset>
+        </form>
+
+        <div class="card" aria-live="polite">
+          <div class="verdict">
+            <span class="pill" id="pill"></span>
+            <h2 id="headline"></h2>
+            <p id="detail"></p>
+            <div class="mono small" id="count"></div>
+          </div>
+          <div id="cal-wrap">
+            <h3 id="cal-title" style="margin-bottom:8px"></h3>
+            <div class="cal" id="cal"></div>
+          </div>
+          <div class="row">
+            <a class="btn primary" href="#help">Get help setting it up</a>
+            <a class="btn ghost" id="guide-btn" href="mtd-sole-traders.html">Read the plain-English guide</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="gutter" style="background:var(--surface);border-block:1px solid var(--line)">
+    <div class="wrap stack" style="gap:24px">
+      <h2>How MTD Ready helps</h2>
+      <ol class="steps">
+        <li><h3>Check where you stand</h3><p>Use the free checker above to see if the rules apply and when you start.</p></li>
+        <li><h3>Tell us what you need</h3><p>Want an accountant to handle it, or prefer to do it yourself? Fill in the short form.</p></li>
+        <li><h3>Get matched</h3><p>We introduce you to an MTD-ready accountant who covers your area, usually within two working days.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="gutter" id="help">
+    <div class="narrow stack" style="gap:20px">
+      <div class="stack" style="gap:8px">
+        <div class="eyebrow">Free, no obligation</div>
+        <h2>Get help with Making Tax Digital</h2>
+        <p class="muted" style="margin:0">Tell us a little about you and we’ll match you with an accountant who works with MTD clients. You decide whether to go ahead.</p>
+      </div>
+
+      <form id="lead" class="form card" novalidate>
+        <div class="two">
+          <div class="field"><label for="f-name">Your name</label><input id="f-name" name="name" autocomplete="name" required maxlength="120"></div>
+          <div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" autocomplete="email" required maxlength="200"></div>
+        </div>
+        <div class="two">
+          <div class="field"><label for="f-phone">Phone <span class="muted">(optional)</span></label><input id="f-phone" name="phone" type="tel" autocomplete="tel" maxlength="40"></div>
+          <div class="field"><label for="f-postcode">Postcode</label><input id="f-postcode" name="postcode" autocomplete="postal-code" required maxlength="10" placeholder="e.g. M1 2AB"></div>
+        </div>
+        <div class="field">
+          <label for="f-wants">What would you like?</label>
+          <select id="f-wants" name="wants">
+            <option value="accountant">An accountant to handle MTD for me</option>
+            <option value="diy">Help doing it myself</option>
+            <option value="unsure">Not sure yet, I have questions</option>
+          </select>
+        </div>
+        <div class="field"><label for="f-msg">Anything else? <span class="muted">(optional)</span></label><textarea id="f-msg" name="message" maxlength="1000" placeholder="e.g. I have two rental flats and do some freelance work"></textarea></div>
+        <div class="hp" aria-hidden="true"><label for="f-web">Leave this empty</label><input id="f-web" name="website" tabindex="-1" autocomplete="off"></div>
+        <label class="check"><input type="checkbox" id="f-consent" required><span>I agree that MTD Ready can store my details and share them with one partner accountant so they can contact me about MTD. See the <a href="privacy.html">privacy notice</a>.</span></label>
+        <p class="hint">We may receive a fee from accountants we introduce you to. It never costs you anything extra.</p>
+        <div id="lead-msg" class="notice" hidden></div>
+        <div class="row"><button class="btn primary" id="lead-btn" type="submit">Send my request</button></div>
+      </form>
+
+      <div class="callout" id="guide-offer" hidden>
+        <h3>Prefer to do it yourself?</h3>
+        <p class="muted" style="margin:0">Our step-by-step DIY guide covers choosing software, setting it up and sending your first quarterly update.</p>
+        <div><a class="btn ghost" id="guide-link" target="_blank" rel="noopener">Get the DIY guide</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="gutter" style="padding-top:0">
+    <div class="wrap stack" style="gap:20px">
+      <h2>Plain-English guides</h2>
+      <div class="guides">
+        <a href="mtd-sole-traders.html"><span class="eyebrow">Self-employed</span><h3>MTD for sole traders</h3><p>Who’s in, the dates, and what you have to send HMRC.</p></a>
+        <a href="mtd-landlords.html"><span class="eyebrow">Property</span><h3>MTD for landlords</h3><p>How rent is counted, joint ownership, and letting agents.</p></a>
+        <a href="mtd-software.html"><span class="eyebrow">Tools</span><h3>Choosing MTD software</h3><p>What it has to do and how to pick, including free options.</p></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="gutter" style="padding-top:0">
+    <div class="narrow">
+      <h2 style="margin-bottom:8px">Common questions</h2>
+      <details><summary>Is the £30,000 before or after expenses?</summary><p>Before. It’s your total income from self-employment and property added together, before you take off any costs or allowances.</p></details>
+      <details><summary>Do I file more tax returns?</summary><p>No. You send four short quarterly updates of income and expenses through your software, then your tax return at the end of the year as before. The updates aren’t tax returns and you don’t pay tax with them.</p></details>
+      <details><summary>Which year’s income decides when I start?</summary><p>For April 2027 it’s your income in the 2025–26 tax year (6 April 2025 to 5 April 2026). For April 2028 it’s 2026–27.</p></details>
+      <details><summary>Is MTD Ready part of HMRC?</summary><p>No. We’re an independent service. We don’t give tax advice; the accountants we introduce you to do. Always check your own position on GOV.UK.</p></details>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot gutter">
+  <div class="wrap">
+    <p><b>MTD Ready</b> is an independent introduction and information service. Not affiliated with HMRC. Not tax advice. Rules can change; check GOV.UK (“Check if you need to use Making Tax Digital for Income Tax”) or speak to an accountant.</p>
+    <p><a href="privacy.html">Privacy notice</a> · Contact: <span id="contact-email"></span></p>
+  </div>
+</footer>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.50.0/dist/umd/supabase.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
