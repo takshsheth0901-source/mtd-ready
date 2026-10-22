@@ -14,7 +14,7 @@ window.MTD_CONFIG = {
   BUSINESS_NAME: "MTD Ready", // who is responsible for the data (privacy page); add your name, e.g. "Taksh Sheth trading as MTD Ready"
 
   // Pro report: your Stripe Payment Link (starts https://buy.stripe.com/...). Leave "" to hide payments.
-  STRIPE_LINK: "",
+  STRIPE_LINK: "https://buy.stripe.com/4gM4gB5R82Hz6cz1jr7N600",
   PRO_PRICE: "£9",
 
   // Optional: link to your DIY guide on Gumroad or Payhip. Leave "" to hide it.
